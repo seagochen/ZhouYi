@@ -33,19 +33,30 @@ def get_toss_results():
     return toss_results
 
 
-
 # 爻值转换为二进制表示
 def yao_to_binary(yao_list, changing=False):
-    binary = ''
+    """
+    把爻转换成二进制字符串
+    :param yao_list: 6个数字（6,7,8,9）
+    :param changing: 是否计算变卦（6变阳, 9变阴）
+    :return: 6位二进制字符串（低位在前）
+    """
+    binary_str = ""
     for yao in yao_list:
-        if yao in ['7', '9']:  # 阳爻
-            if changing and yao == '9':
-                binary += '0'  # 老阳变阴
-            else:
-                binary += '1'
-        else:  # 阴爻
-            if changing and yao == '6':
-                binary += '1'  # 老阴变阳
-            else:
-                binary += '0'
-    return binary[::-1] # 反转
+        if changing:  # 计算变卦
+            if yao == 6:
+                binary_str += "1"  # 6 变 阳（⚊）
+            elif yao == 9:
+                binary_str += "0"  # 9 变 阴（⚋）
+            elif yao == 7:
+                binary_str += "1"  # 7 保持 阳（⚊）
+            elif yao == 8:
+                binary_str += "0"  # 8 保持 阴（⚋）
+        else:  # 计算本卦
+            if yao in [6, 8]:
+                binary_str += "0"  # 6、8 是阴（⚋）
+            elif yao in [7, 9]:
+                binary_str += "1"  # 7、9 是阳（⚊）
+
+    return binary_str[::-1]  # 易经卦象低位在前，高位在后，需反转
+
